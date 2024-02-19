@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import axios from "axios";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import CityCard from "./CityCard.vue";
 
@@ -21,7 +21,7 @@ const getCities = async () => {
       localStorage.getItem("savedCities") as string
     );
 
-    const requests:any = [];
+    const requests: any = [];
     savedCities.value.forEach((city: any) => {
       requests.push(
         axios.get(
@@ -35,14 +35,19 @@ const getCities = async () => {
 
     weatherData.forEach((value, index) => {
       console.log(value);
-      
+
       savedCities.value[index].weather = value.data;
     });
 
-    
+
   }
 };
 await getCities();
+
+onMounted(async () => {
+  await getCities();
+});
+
 
 const router = useRouter();
 const goToCityView = (city: any) => {
