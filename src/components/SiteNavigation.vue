@@ -9,11 +9,13 @@
             </RouterLink>
 
             <div class="flex  gap-3 flex-1 justify-end">
-                <i class="fa-solid fa-circle-info text-xl hover:text-weather-secondary duration-150 cursor-pointer" @click="toggleModal"></i>
-                <i class="fa-solid fa-plus text-xl hover:text-weather-secondary duration-150 cursor-pointer"></i>
+                <i class="fa-solid fa-circle-info text-xl hover:text-weather-secondary duration-150 cursor-pointer"
+                    @click="toggleModal"></i>
+                <i class="fa-solid fa-plus text-xl
+                 hover:text-weather-secondary duration-150 cursor-pointer" @click="addCity()"></i>
             </div>
 
-            <BaseModal :modal-active="modalActive" @close-modal="toggleModal" >
+            <BaseModal :modal-active="modalActive" @close-modal="toggleModal">
                 <div class="text-black">
                     <h1 class="text-2xl mb-1">关于:</h1>
                     <p class="mb-4">
@@ -44,15 +46,49 @@
 </template>
 
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import BaseModal from './BaseModal.vue';
 import { ref } from 'vue';
+import { uid } from "uid";
 
-
+const route = useRoute();
+const router = useRouter();
+let savedCities = ref([] as any[]);
 let modalActive = ref();
-
-function toggleModal(){
+function toggleModal() {
     modalActive.value = !modalActive.value;
+}
+
+function addCity() {
+    if (localStorage.getItem('savedCities')) {
+        savedCities.value = JSON.parse(localStorage.getItem('savedCities')!);
+    };
+    let locationObj = ref({
+        id: uid(),
+        city: route.params.city,
+        cityId: route.query.id
+    });
+    // 判断是否已经存在相同 cityId 的城市
+    // 遍历savedCitiesh获取所有cityid存到数组中
+    let cityIds = savedCities.value.map(item =>  item._value.cityId);
+    // 判断locationObj.value.cityId是否在数组中
+    let flag = cityIds.includes(locationObj.value.cityId)
+
+    if (flag) {
+       // 如果已经存在该城市，则直接返回
+        console.log("该城市已经存在");
+        return;
+    } else {
+        savedCities.value.push(locationObj);
+        localStorage.setItem('savedCities', JSON.stringify(savedCities.value));
+
+        let query = Object.assign({}, route.query);
+        delete query.preview;
+        router.replace({
+            query: query
+        });
+    }
+
 }
 
 
