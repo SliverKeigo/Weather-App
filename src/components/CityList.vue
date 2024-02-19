@@ -1,7 +1,11 @@
 <template>
-    <div>
+  <div v-for="city in savedCities" :key="city.id">
+    <CityCard :city="city" @click="goToCityView(city)" />
+  </div>
 
-    </div>
+  <p v-if="savedCities.length === 0">
+    未添加任何地点。要开始追踪一个地点，请在上方搜索框搜索
+  </p>
 </template>
 
 <script setup lang="ts">
@@ -21,16 +25,21 @@ const getCities = async () => {
     savedCities.value.forEach((city: any) => {
       requests.push(
         axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=7efa332cf48aeb9d2d391a51027f1a71&units=imperial`
+          `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=7efa332cf48aeb9d2d391a51027f1a71&units=metric`
         )
       );
     });
 
     const weatherData = await Promise.all(requests);
 
+
     weatherData.forEach((value, index) => {
+      console.log(value);
+      
       savedCities.value[index].weather = value.data;
     });
+
+    
   }
 };
 await getCities();

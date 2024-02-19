@@ -73,11 +73,9 @@ function addCity() {
     coords: {
       lat: route.query.lat,
       lng: route.query.lng,
-    },
-  };
-    // 判断是否已经存在相同 cityId 的城市
-    // 遍历savedCitiesh获取所有cityid存到数组中
-    let cities = savedCities.value.map(item =>  item._value.city);
+    }
+};
+    let cities = savedCities.value.map(item => item.city );
     // 判断locationObj.value.cityId是否在数组中
     let flag = cities.includes(locationObj.city)
 
