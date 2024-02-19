@@ -4,13 +4,14 @@
         <Suspense>
             <AsyncCityView></AsyncCityView>
             <template #fallback>
-                <p class="text-center">加载中...</p>
+                <CityViewSkeletonVue></CityViewSkeletonVue>
             </template>
         </Suspense>
     </div>
 </template>
 
 <script setup lang="ts">
+import CityViewSkeletonVue from '@/components/CityViewSkeleton.vue';
 import AsyncCityView from '../components/AsyncCityView.vue';
 
 
