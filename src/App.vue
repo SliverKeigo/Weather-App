@@ -6,8 +6,22 @@ import { RouterView } from "vue-router";
 <template>
   <div class="flex flex-col min-h-screen font-Roboto bg-weather-primary">
     <SiteNavigation></SiteNavigation>
-    <RouterView ></RouterView>
+    <RouterView v-slot="{Component} ">
+      <Transition name="page" mode="out-in">
+        <component :is="Component"></component>
+      </Transition>
+    </RouterView>
   </div>
 </template>
 
-<style scoped></style>
+<style>
+
+.page-enter-active {
+  transition: 600ms ease all;
+}
+
+.page-enter-from {
+  opacity: 0;
+}
+
+</style>
